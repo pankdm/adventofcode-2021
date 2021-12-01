@@ -1,6 +1,5 @@
 pub mod days;
 
-
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::ops::{Add, Mul};
