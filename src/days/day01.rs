@@ -11,38 +11,14 @@ use std::collections::{HashMap, HashSet, VecDeque};
 use crate::*;
 
 pub fn part1(lines: &Vec<String>) -> i64 {
-    let mut v = Vec::new();
-    for line in lines {
-        let x = parse_i64(line);
-        v.push(x);
-    }
-    let mut res = 0;
-    for i in 1..v.len() {
-        if v[i] > v[i - 1] {
-            res += 1;
-        }
-    }
-    res
+    let v = lines.iter().map(|l| parse_i64(l));
+    v.tuple_windows().filter(|(a, b)| a < b).count() as i64
 }
 
 pub fn part2(lines: &Vec<String>) -> i64 {
-    let mut v = Vec::new();
-    for line in lines {
-        let x = parse_i64(line);
-        v.push(x);
-    }
-    let mut res = 0;
-    let mut w = Vec::new();
-    for i in 2..v.len() {
-        w.push(v[i] + v[i - 1] + v[i - 2]);
-    }
-    let mut res = 0;
-    for i in 1..w.len() {
-        if w[i] > w[i - 1] {
-            res += 1;
-        }
-    }
-    res
+    let v = lines.iter().map(|l| parse_i64(l));
+    let sums = v.tuple_windows().map(|(a, b, c)| a + b + c);
+    sums.tuple_windows().filter(|(a, b)| a < b).count() as i64
 }
 
 pub fn read_main_input() -> Vec<String> {
