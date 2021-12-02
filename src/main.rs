@@ -13,23 +13,8 @@ extern crate aoc;
 use aoc::*;
 use days::*;
 
-pub fn read_main_input() -> Vec<String> {
-    let input = fs::read_to_string("input/day25/in.txt").unwrap();
-    // let input = fs::read_to_string("input/day07/demo.txt").unwrap();
-    to_lines(&input)
-}
-
-pub fn read_input_from_args(args: &Vec<String>) -> Vec<String> {
-    println!("args: {:?}", args);
-    if args.len() <= 1 {
-        return read_main_input();
-    }
-    let input = fs::read_to_string(&args[1]).unwrap();
-    to_lines(&input)
-}
-
 fn main() {
-    day01::main();
+    day02::main();
     // let args: Vec<String> = env::args().collect();
     // let lines = read_input_from_args(&args);
 

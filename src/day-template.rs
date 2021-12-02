@@ -19,7 +19,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
 }
 
 pub fn read_main_input() -> Vec<String> {
-    read_input("input/day01/in.txt")
+    read_input("input/dayNN/in.txt")
 }
 
 #[cfg(test)]
