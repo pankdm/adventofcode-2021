@@ -25,6 +25,10 @@ pub fn to_vv_char(lines: &Vec<String>) -> Vec<Vec<char>> {
     lines.iter().map(|x| x.trim().chars().collect()).collect()
 }
 
+pub fn to_str(v: &Vec<char>) -> String {
+    v.iter().collect()
+}
+
 pub fn parse_i64(s: &str) -> i64 {
     match s.parse::<i64>() {
         Err(e) => {
