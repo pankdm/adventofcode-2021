@@ -39,7 +39,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
             'f' => {
                 pos += dist;
                 depth += aim * dist;
-            },
+            }
             'd' => aim += dist,
             'u' => aim -= dist,
             _ => {}
