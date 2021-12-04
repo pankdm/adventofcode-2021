@@ -39,11 +39,10 @@ pub fn part2(lines: &Vec<String>) -> i64 {
         if v0.len() == 1 {
             break;
         }
-
         let n0 = v0.iter().filter(|s| s[i] == '0').count();
         let n1 = v0.iter().filter(|s| s[i] == '1').count();
         let bit = if n1 >= n0 { '1' } else { '0' };
-        v0 = v0.iter().cloned().filter(|x| x[i] == bit).collect();
+        v0.retain(|x| x[i] == bit);
     }
     let res0 = i64::from_str_radix(&to_str(&v0[0]), 2).unwrap();
 
@@ -56,7 +55,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
         let n0 = v1.iter().filter(|s| s[i] == '0').count();
         let n1 = v1.iter().filter(|s| s[i] == '1').count();
         let bit = if n0 <= n1 { '0' } else { '1' };
-        v1 = v1.iter().cloned().filter(|x| x[i] == bit).collect();
+        v1.retain(|x| x[i] == bit);
     }
     let res1 = i64::from_str_radix(&to_str(&v1[0]), 2).unwrap();
 

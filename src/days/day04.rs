@@ -58,8 +58,6 @@ pub fn part1(lines: &Vec<String>) -> i64 {
         ind += 1;
         boards.push(board);
     }
-    // println!("{:#?}", boards[0]);
-    // println!("{:#?}", boards[1]);
     for index in 0..nums.len() {
         for board in boards.iter() {
             let score = check_board(&board, index, &nums);
@@ -91,10 +89,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
         ind += 1;
         boards.push(board);
     }
-    // println!("{:#?}", boards[0]);
-    // println!("{:#?}", boards[1]);
     let mut res = Vec::new();
-
     for (bi, board) in boards.iter().enumerate() {
         for index in 0..nums.len() {
             let score = check_board(&board, index, &nums);
