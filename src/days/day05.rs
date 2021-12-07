@@ -16,10 +16,10 @@ pub fn part1(lines: &Vec<String>) -> i64 {
     for line in lines {
         let re = Regex::new(r"(\d+),(\d+) -> (\d+),(\d+)").unwrap();
         let cap = re.captures(line).unwrap();
-        let x1 = parse_i64(cap.get(1).unwrap().as_str());
-        let y1 = parse_i64(cap.get(2).unwrap().as_str());
-        let x2 = parse_i64(cap.get(3).unwrap().as_str());
-        let y2 = parse_i64(cap.get(4).unwrap().as_str());
+        let x1 = cap.get(1).unwrap().as_str().to_i64();
+        let y1 = cap.get(2).unwrap().as_str().to_i64();
+        let x2 = cap.get(3).unwrap().as_str().to_i64();
+        let y2 = cap.get(4).unwrap().as_str().to_i64();
         vents.push((x1, y1, x2, y2));
     }
     let mut points = HashMap::new();
@@ -44,7 +44,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
     for line in lines {
         let re = Regex::new(r"(\d+),(\d+) -> (\d+),(\d+)").unwrap();
         let cap = re.captures(line).unwrap();
-        let v: Vec<_> = (1..=4).map(|i| parse_i64(&cap[i])).collect();
+        let v: Vec<_> = (1..=4).map(|i| cap[i].to_i64()).collect();
         vents.push((v[0], v[1], v[2], v[3]));
     }
     let mut points = HashMap::new();

@@ -148,6 +148,22 @@ pub fn neighbours8() -> Vec<Vector2d> {
     res
 }
 
+pub trait ToI64 {
+    fn to_i64(&self) -> i64;
+}
+
+impl ToI64 for String {
+    fn to_i64(&self) -> i64 {
+        parse_i64(self)
+    }
+}
+
+impl ToI64 for str {
+    fn to_i64(&self) -> i64 {
+        parse_i64(self)
+    }
+}
+
 // Extended gcd algorithm
 // returns (g, x, y) where
 //  - gcd(a, b) = g

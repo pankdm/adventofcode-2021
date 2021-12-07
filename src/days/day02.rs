@@ -16,7 +16,7 @@ pub fn part1(lines: &Vec<String>) -> i64 {
     for line in lines {
         let parts = split_string(line, " ");
         let dir = to_v_char(&parts[0]);
-        let dist = parse_i64(&parts[1]);
+        let dist = parts[1].to_i64();
         match dir[0] {
             'f' => pos += dist,
             'd' => depth += dist,
@@ -34,7 +34,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
     for line in lines {
         let parts = split_string(line, " ");
         let dir = to_v_char(&parts[0]);
-        let dist = parse_i64(&parts[1]);
+        let dist = parts[1].to_i64();
         match dir[0] {
             'f' => {
                 pos += dist;

@@ -48,10 +48,7 @@ pub fn part1(lines: &Vec<String>) -> i64 {
     while ind < lines.len() {
         let mut board = Vec::new();
         for i in 0..5 {
-            let ints: Vec<_> = lines[ind]
-                .split_whitespace()
-                .map(|s| parse_i64(s))
-                .collect();
+            let ints: Vec<_> = lines[ind].split_whitespace().map(|s| s.to_i64()).collect();
             board.push(ints);
             ind += 1;
         }
@@ -79,10 +76,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
     while ind < lines.len() {
         let mut board = Vec::new();
         for i in 0..5 {
-            let ints: Vec<_> = lines[ind]
-                .split_whitespace()
-                .map(|s| parse_i64(s))
-                .collect();
+            let ints: Vec<_> = lines[ind].split_whitespace().map(|s| s.to_i64()).collect();
             board.push(ints);
             ind += 1;
         }

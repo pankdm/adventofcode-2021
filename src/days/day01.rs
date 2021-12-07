@@ -11,12 +11,12 @@ use std::collections::{HashMap, HashSet, VecDeque};
 use crate::*;
 
 pub fn part1(lines: &Vec<String>) -> i64 {
-    let v = lines.iter().map(|l| parse_i64(l));
+    let v = lines.iter().map(|l| l.to_i64());
     v.tuple_windows().filter(|(a, b)| a < b).count() as i64
 }
 
 pub fn part2(lines: &Vec<String>) -> i64 {
-    let v = lines.iter().map(|l| parse_i64(l));
+    let v = lines.iter().map(|l| l.to_i64());
     let sums = v.tuple_windows().map(|(a, b, c)| a + b + c);
     sums.tuple_windows().filter(|(a, b)| a < b).count() as i64
 }
