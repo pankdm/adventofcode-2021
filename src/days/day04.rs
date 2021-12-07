@@ -27,10 +27,6 @@ pub fn check_board(b: &Vec<Vec<i64>>, index: usize, nums: &Vec<i64>) -> i64 {
         let good_col = (0..5).map(|i| b[val][i]).all(|x| was.contains(&x));
         let good_row = (0..5).map(|i| b[i][val]).all(|x| was.contains(&x));
         if good_col || good_row {
-            println!(
-                "at value = {} (id = {}), score = {}",
-                nums[index], index, score
-            );
             return score * nums[index];
         }
     }
@@ -109,13 +105,13 @@ mod tests {
     #[test]
     fn test_part1() {
         let lines = read_main_input();
-        assert_eq!(part1(&lines), -1);
+        assert_eq!(part1(&lines), 60368);
     }
 
     #[test]
     fn test_part2() {
         let lines = read_main_input();
-        assert_eq!(part2(&lines), -1);
+        assert_eq!(part2(&lines), 17435);
     }
 }
 
