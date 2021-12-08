@@ -13,10 +13,8 @@ use crate::*;
 pub fn part1(lines: &Vec<String>) -> i64 {
     let crabs = parse_ints(&lines[0], ",");
 
-    let min = *crabs.iter().min().unwrap();
-    let max = *crabs.iter().max().unwrap();
-
-    (min..=max)
+    let (min, max) = crabs.iter().minmax().into_option().unwrap();
+    (*min..=*max)
         .map(|pos| crabs.iter().map(|c| (c - pos).abs()).sum())
         .min()
         .unwrap()
