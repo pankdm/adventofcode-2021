@@ -11,7 +11,7 @@ use std::collections::{HashMap, HashSet, VecDeque};
 use crate::*;
 
 pub fn find_first(line: &String) -> i64 {
-    let chars = to_v_char(line);
+    let chars = line.to_vec();
     let brackets = vec![
         ('(', ')', 3),
         ('[', ']', 57),
@@ -47,7 +47,7 @@ pub fn find_first(line: &String) -> i64 {
 }
 
 pub fn find_incomplete(line: &String) -> i64 {
-    let chars = to_v_char(line);
+    let chars = line.to_vec();
     let brackets = vec![('(', ')', 1), ('[', ']', 2), ('{', '}', 3), ('<', '>', 4)];
     let mut opening = HashSet::new();
     let mut scores = HashMap::new();
@@ -79,9 +79,6 @@ pub fn find_incomplete(line: &String) -> i64 {
         res *= 5;
         res += scores[ch];
     }
-    let out: String = stack.iter().rev().cloned().collect();
-    // println!("  {} -> {:?} {}", line, out, res);
-
     res
 }
 

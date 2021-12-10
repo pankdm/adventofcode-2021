@@ -36,8 +36,7 @@ pub fn part1(lines: &Vec<String>) -> i64 {
                 // println!("({}, {}) -> {}", r, c, map[r][c]);
                 res += map[r][c] as i64 + 1;
             }
-
-        } 
+        }
     }
     res
 }
@@ -56,9 +55,7 @@ pub fn dfs(r: usize, c: usize, map: &Vec<Vec<u8>>, comp: &mut Vec<Vec<i32>>, ind
             }
         }
     }
-
 }
-
 
 pub fn part2(lines: &Vec<String>) -> i64 {
     let mut map = Vec::new();
@@ -72,14 +69,14 @@ pub fn part2(lines: &Vec<String>) -> i64 {
     let mut index = 0;
 
     let mut res = 0;
-    
+
     for r in 0..map.len() {
         for c in 0..map[r].len() {
             if map[r][c] < 9 && comp[r][c] == 0 {
                 index += 1;
                 dfs(r, c, &map, &mut comp, index);
             }
-        } 
+        }
     }
 
     let mut counts = HashMap::new();

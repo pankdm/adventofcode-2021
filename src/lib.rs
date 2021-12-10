@@ -17,12 +17,8 @@ pub fn read_input(filename: &str) -> Vec<String> {
     return res;
 }
 
-pub fn to_v_char(line: &str) -> Vec<char> {
-    line.chars().collect()
-}
-
 pub fn to_vv_char(lines: &Vec<String>) -> Vec<Vec<char>> {
-    lines.iter().map(|x| x.trim().chars().collect()).collect()
+    lines.iter().map(|x| x.to_vec()).collect()
 }
 
 pub fn to_str(v: &Vec<char>) -> String {
@@ -46,7 +42,7 @@ pub fn parse_ints(s: &str, pattern: &str) -> Vec<i64> {
     let mut nums = Vec::new();
     // dbg!(parts.clone());
     for part in parts.iter() {
-        nums.push(parse_i64(part));
+        nums.push(part.to_i64());
     }
     nums
 }
@@ -152,15 +148,19 @@ pub trait ToI64 {
     fn to_i64(&self) -> i64;
 }
 
-impl ToI64 for String {
+impl ToI64 for str {
     fn to_i64(&self) -> i64 {
         parse_i64(self)
     }
 }
 
-impl ToI64 for str {
-    fn to_i64(&self) -> i64 {
-        parse_i64(self)
+pub trait ToVec {
+    fn to_vec(&self) -> Vec<char>;
+}
+
+impl ToVec for str {
+    fn to_vec(&self) -> Vec<char> {
+        self.chars().collect()
     }
 }
 
