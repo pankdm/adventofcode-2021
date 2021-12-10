@@ -14,7 +14,7 @@ use aoc::*;
 use days::*;
 
 fn main() {
-    day10::main();
+    day09::main();
     // let args: Vec<String> = env::args().collect();
     // let lines = read_input_from_args(&args);
 
