@@ -19,7 +19,13 @@ pub fn part2(lines: &Vec<String>) -> i64 {
 }
 
 pub fn read_main_input() -> Vec<String> {
-    read_input("input/dayNN/in.txt")
+    let args = std::env::args().collect::<Vec<String>>();
+    let file = if args.len() < 2 {
+        "in.txt".to_string()
+    } else {
+        args[1].to_string()
+    };
+    read_input(&format!("input/dayNN/{}", file))
 }
 
 #[cfg(test)]

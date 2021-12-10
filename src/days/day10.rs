@@ -48,12 +48,7 @@ pub fn find_first(line: &String) -> i64 {
 
 pub fn find_incomplete(line: &String) -> i64 {
     let chars = to_v_char(line);
-    let brackets = vec![
-        ('(', ')', 1),
-        ('[', ']', 2),
-        ('{', '}', 3),
-        ('<', '>', 4),
-    ];
+    let brackets = vec![('(', ')', 1), ('[', ']', 2), ('{', '}', 3), ('<', '>', 4)];
     let mut opening = HashSet::new();
     let mut scores = HashMap::new();
 
@@ -85,7 +80,7 @@ pub fn find_incomplete(line: &String) -> i64 {
         res += scores[ch];
     }
     let out: String = stack.iter().rev().cloned().collect();
-    println!("  {} -> {:?} {}", line, out, res);
+    // println!("  {} -> {:?} {}", line, out, res);
 
     res
 }
@@ -104,18 +99,23 @@ pub fn part2(lines: &Vec<String>) -> i64 {
     for line in lines {
         let score = find_incomplete(line);
         if score > 0 {
-            println!("{} -> {}", line, score);
+            // println!("{} -> {}", line, score);
             scores.push(score);
         }
     }
     scores.sort();
     let len = scores.len();
-    println!("len = {}", len);
-    scores[ len / 2]
+    scores[len / 2]
 }
 
 pub fn read_main_input() -> Vec<String> {
-    read_input("input/day10/in.txt")
+    let args = std::env::args().collect::<Vec<String>>();
+    let file = if args.len() < 2 {
+        "in.txt".to_string()
+    } else {
+        args[1].to_string()
+    };
+    read_input(&format!("input/day10/{}", file))
 }
 
 #[cfg(test)]

@@ -43,7 +43,6 @@ pub fn part1(lines: &Vec<String>) -> i64 {
 // .    f  e    f  .    f  e    f  .    f
 //  gggg    gggg    ....    gggg    gggg
 
-
 pub fn sorted_digit(s: &str) -> String {
     s.chars().sorted().collect()
 }
@@ -100,9 +99,10 @@ pub fn part2(lines: &Vec<String>) -> i64 {
             let mut mapping: HashMap<String, _> = HashMap::new();
             for digit in row.iter() {
                 let digit = sorted_digit(digit);
-                let mapped: String = digit.chars().map(|c| {
-                    (p[c as usize - 'a' as usize] + 'a' as u8) as char
-                }).collect();
+                let mapped: String = digit
+                    .chars()
+                    .map(|c| (p[c as usize - 'a' as usize] + 'a' as u8) as char)
+                    .collect();
                 let mapped = sorted_digit(&mapped);
                 if !valid.contains_key(&mapped) {
                     // println!("not ok: digit = {}, mapped = {}", digit, mapped);
