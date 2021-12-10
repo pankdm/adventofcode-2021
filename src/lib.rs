@@ -1,4 +1,5 @@
 pub mod days;
+pub mod day_template;
 
 use std::fs::File;
 use std::io::{BufRead, BufReader};
