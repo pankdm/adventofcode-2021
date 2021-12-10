@@ -91,16 +91,17 @@ pub fn part2(lines: &Vec<String>) -> i64 {
     let mut flat: Vec<_> = counts.iter().map(|(k, v)| *v as i64).collect();
     flat.sort();
     flat.reverse();
-    flat[0] * flat[1] * flat[2]
+    flat[0..3].iter().product()
 }
 
 pub fn read_main_input() -> Vec<String> {
     let args = std::env::args().collect::<Vec<String>>();
-    let file = if args.len() < 2 {
-        "in.txt".to_string()
-    } else {
-        args[1].to_string()
-    };
+    let mut file = "in.txt".to_string();
+
+    #[cfg(not(test))]
+    if args.len() >= 2 {
+        file = args[1].to_string()
+    }
     read_input(&format!("input/day09/{}", file))
 }
 
