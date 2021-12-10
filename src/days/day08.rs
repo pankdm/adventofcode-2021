@@ -45,9 +45,7 @@ pub fn part1(lines: &Vec<String>) -> i64 {
 
 
 pub fn sorted_digit(s: &str) -> String {
-    let mut ss: Vec<_> = s.chars().collect();
-    ss.sort();
-    ss.iter().collect()
+    s.chars().sorted().collect()
 }
 
 pub fn part2(lines: &Vec<String>) -> i64 {
