@@ -131,6 +131,27 @@ impl GridExt for Grid {
     }
 }
 
+
+type Grid2 = Vec<Vec<u8>>;
+
+pub trait GridExt2 {
+    fn get(&self, v: Vector2d) -> u8;
+    fn inside(&self, v: Vector2d) -> bool;
+    fn set(&mut self, v: Vector2d, c: u8);
+}
+
+impl GridExt2 for Grid2 {
+    fn get(&self, v: Vector2d) -> u8 {
+        self[v.y as usize][v.x as usize]
+    }
+    fn inside(&self, v: Vector2d) -> bool {
+        0 <= v.y && v.y < self.len() as i64 && 0 <= v.x && v.x < self[v.y as usize].len() as i64
+    }
+    fn set(&mut self, v: Vector2d, c: u8) {
+        self[v.y as usize][v.x as usize] = c;
+    }
+}
+
 pub fn neighbours8() -> Vec<Vector2d> {
     let mut res = Vec::new();
     let d: Vec<i64> = vec![-1, 0, 1];
