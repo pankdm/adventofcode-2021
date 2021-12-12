@@ -54,19 +54,13 @@ pub fn part1(lines: &Vec<String>) -> i64 {
 
     let mut res = 0;
     for step in 0..100 {
-        for row in state.iter_mut() {
-            for value in row.iter_mut() {
-                *value += 1;
-            }
-        }
+        state.iter_mut().flatten().for_each(|x| *x += 1);
         res += flash(&mut state);
-        for r in 0..rx {
-            for c in 0..cx {
-                if state[r][c] > 9 {
-                    state[r][c] = 0;
-                }
+        state.iter_mut().flatten().for_each(|x| {
+            if *x > 9 {
+                *x = 0
             }
-        }
+        });
     }
     res
 }
@@ -84,23 +78,16 @@ pub fn part2(lines: &Vec<String>) -> i64 {
 
     let mut res = 0;
     for step in 0..100000 {
-        for row in state.iter_mut() {
-            for value in row.iter_mut() {
-                *value += 1;
-            }
-        }
+        state.iter_mut().flatten().for_each(|x| *x += 1);
         let num_flashed = flash(&mut state) as usize;
         if num_flashed == rx * cx {
             return step + 1;
         }
-
-        for r in 0..rx {
-            for c in 0..cx {
-                if state[r][c] > 9 {
-                    state[r][c] = 0;
-                }
+        state.iter_mut().flatten().for_each(|x| {
+            if *x > 9 {
+                *x = 0
             }
-        }
+        });
     }
     -1
 }
