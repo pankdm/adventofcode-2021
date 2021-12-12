@@ -10,22 +10,24 @@ use std::collections::{HashMap, HashSet, VecDeque};
 
 use crate::*;
 
-pub fn find_first(line: &String) -> i64 {
+pub fn process_line(line: &String, unmatched: &mut Vec<i64>, incomplete: &mut Vec<i64>) {
     let chars = line.to_vec();
-    let brackets = vec![
-        ('(', ')', 3),
-        ('[', ']', 57),
-        ('{', '}', 1197),
-        ('<', '>', 25137),
+    let data = vec![
+        ('(', ')', 3, 1),
+        ('[', ']', 57, 2),
+        ('{', '}', 1197, 3),
+        ('<', '>', 25137, 4),
     ];
     let mut opening = HashSet::new();
-    let mut scores = HashMap::new();
-
+    let mut scores1 = HashMap::new();
+    let mut scores2 = HashMap::new();
     let mut matching = HashMap::new();
-    for (open, close, value) in brackets.iter() {
+
+    for (open, close, v1, v2) in data.iter() {
         matching.insert(close, open);
         opening.insert(open);
-        scores.insert(close, value);
+        scores1.insert(close, v1);
+        scores2.insert(open, v2);
     }
 
     let mut stack = Vec::new();
@@ -33,43 +35,15 @@ pub fn find_first(line: &String) -> i64 {
         if opening.contains(ch) {
             stack.push(ch);
         } else {
-            let score = *scores[ch];
+            let score = *scores1[ch];
             if stack.is_empty() {
-                return score;
+                unmatched.push(score);
+                return;
             }
             let expected = stack.pop().unwrap();
             if matching[ch] != expected {
-                return score;
-            }
-        }
-    }
-    0
-}
-
-pub fn find_incomplete(line: &String) -> i64 {
-    let chars = line.to_vec();
-    let brackets = vec![('(', ')', 1), ('[', ']', 2), ('{', '}', 3), ('<', '>', 4)];
-    let mut opening = HashSet::new();
-    let mut scores = HashMap::new();
-
-    let mut matching = HashMap::new();
-    for (open, close, value) in brackets.iter() {
-        matching.insert(close, open);
-        opening.insert(open);
-        scores.insert(open, value);
-    }
-
-    let mut stack = Vec::new();
-    for ch in chars.iter() {
-        if opening.contains(ch) {
-            stack.push(ch);
-        } else {
-            if stack.is_empty() {
-                return 0;
-            }
-            let expected = stack.pop().unwrap();
-            if matching[ch] != expected {
-                return 0;
+                unmatched.push(score);
+                return;
             }
         }
     }
@@ -77,41 +51,40 @@ pub fn find_incomplete(line: &String) -> i64 {
     let mut res = 0;
     for ch in stack.iter().rev() {
         res *= 5;
-        res += scores[ch];
+        res += scores2[ch];
     }
-    res
+    incomplete.push(res);
 }
 
 pub fn part1(lines: &Vec<String>) -> i64 {
-    let mut res = 0;
+    let mut unmatched = Vec::new();
+    let mut incomplete = Vec::new();
     for line in lines {
-        let score = find_first(line);
-        res += score;
+        process_line(line, &mut unmatched, &mut incomplete);
     }
-    res
+    unmatched.iter().sum()
 }
 
 pub fn part2(lines: &Vec<String>) -> i64 {
-    let mut scores = Vec::new();
+    let mut unmatched = Vec::new();
+    let mut incomplete = Vec::new();
     for line in lines {
-        let score = find_incomplete(line);
-        if score > 0 {
-            // println!("{} -> {}", line, score);
-            scores.push(score);
-        }
+        process_line(line, &mut unmatched, &mut incomplete);
     }
-    scores.sort();
-    let len = scores.len();
-    scores[len / 2]
+    incomplete.sort();
+    let len = incomplete.len();
+    incomplete[len / 2]
 }
 
 pub fn read_main_input() -> Vec<String> {
     let args = std::env::args().collect::<Vec<String>>();
-    let file = if args.len() < 2 {
-        "in.txt".to_string()
-    } else {
-        args[1].to_string()
-    };
+    let mut file = "in.txt".to_string();
+
+    // Overwrite the input file, but not in test env
+    #[cfg(not(test))]
+    if args.len() >= 2 {
+        file = args[1].to_string()
+    }
     read_input(&format!("input/day10/{}", file))
 }
 
