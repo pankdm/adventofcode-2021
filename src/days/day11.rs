@@ -10,6 +10,37 @@ use std::collections::{HashMap, HashSet, VecDeque};
 
 use crate::*;
 
+pub fn flash(mut m: &mut Vec<Vec<u8>>) -> i64 {
+    let mut num_flashes = 0;
+    let mut flashed = vec![vec![false; m[0].len()]; m.len()];
+    loop {
+        let mut next = m.clone();
+        let mut changed = false;
+        for r in 0..m.len() {
+            for c in 0..m[0].len() {
+                if m[r][c] > 9 && !flashed[r][c] {
+                    flashed[r][c] = true;
+                    changed = true;
+                    m[r][c] = 0;
+                    num_flashes += 1;
+                    for (dr, dc) in neighbours8() {
+                        let rr = r as i64 + dr;
+                        let cc = c as i64 + dc;
+                        if rr >= 0 && rr < m.len() as i64 && cc >= 0 && cc < m[0].len() as i64 {
+                            next[rr as usize][cc as usize] += 1;
+                        }
+                    }
+                }
+            }
+        }
+        if !changed {
+            break;
+        }
+        *m = next.clone();
+    }
+    num_flashes
+}
+
 pub fn part1(lines: &Vec<String>) -> i64 {
     let mut state = Vec::new();
     for line in lines {
@@ -23,43 +54,12 @@ pub fn part1(lines: &Vec<String>) -> i64 {
 
     let mut res = 0;
     for step in 0..100 {
-        let mut next = state.clone();
-        for row in next.iter_mut() {
+        for row in state.iter_mut() {
             for value in row.iter_mut() {
                 *value += 1;
             }
         }
-        let mut flashed = vec![vec![false; cx]; rx];
-        state = next.clone();
-
-        // flashes
-        let mut index = 0;
-        loop {
-            next = state.clone();
-            let mut changed = false;
-            for r in 0..rx {
-                for c in 0..cx {
-                    if state[r][c] > 9 && !flashed[r][c] {
-                        flashed[r][c] = true;
-                        changed = true;
-                        state[r][c] = 0;
-                        res += 1;
-                        for delta in neighbours8() {
-                            let pt = Vector2d::new(c as i64, r as i64) + delta;
-                            if next.inside(pt) {
-                                let current = next.get(pt);
-                                next.set(pt, current + 1);
-                            }
-                        }
-                    }
-                }
-            }
-            if !changed {
-                break;
-            }
-            state = next.clone();
-            index += 1;
-        }
+        res += flash(&mut state);
         for r in 0..rx {
             for c in 0..cx {
                 if state[r][c] > 9 {
@@ -84,46 +84,12 @@ pub fn part2(lines: &Vec<String>) -> i64 {
 
     let mut res = 0;
     for step in 0..100000 {
-        let mut next = state.clone();
-        for row in next.iter_mut() {
+        for row in state.iter_mut() {
             for value in row.iter_mut() {
                 *value += 1;
             }
         }
-        let mut flashed = vec![vec![false; cx]; rx];
-        state = next.clone();
-
-        // flashes
-        let mut index = 0;
-        let mut num_flashed = 0;
-        loop {
-            next = state.clone();
-            let mut changed = false;
-            for r in 0..rx {
-                for c in 0..cx {
-                    if state[r][c] > 9 && !flashed[r][c] {
-                        flashed[r][c] = true;
-                        changed = true;
-                        state[r][c] = 0;
-                        num_flashed += 1;
-                        res += 1;
-                        for delta in neighbours8() {
-                            let pt = Vector2d::new(c as i64, r as i64) + delta;
-                            if next.inside(pt) {
-                                let current = next.get(pt);
-                                next.set(pt, current + 1);
-                            }
-                        }
-                    }
-                }
-            }
-            if !changed {
-                break;
-            }
-            state = next.clone();
-            index += 1;
-        }
-        // println!("day = {}, flashed = {}", step, num_flashed);
+        let num_flashed = flash(&mut state) as usize;
         if num_flashed == rx * cx {
             return step + 1;
         }
