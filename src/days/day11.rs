@@ -35,7 +35,6 @@ pub fn part1(lines: &Vec<String>) -> i64 {
         // flashes
         let mut index = 0;
         loop {
-    
             next = state.clone();
             let mut changed = false;
             for r in 0..rx {
@@ -49,12 +48,12 @@ pub fn part1(lines: &Vec<String>) -> i64 {
                             let pt = Vector2d::new(c as i64, r as i64) + delta;
                             if next.inside(pt) {
                                 let current = next.get(pt);
-                                next.set(pt, current + 1);    
+                                next.set(pt, current + 1);
                             }
                         }
                     }
                 }
-            }   
+            }
             if !changed {
                 break;
             }
@@ -112,12 +111,12 @@ pub fn part2(lines: &Vec<String>) -> i64 {
                             let pt = Vector2d::new(c as i64, r as i64) + delta;
                             if next.inside(pt) {
                                 let current = next.get(pt);
-                                next.set(pt, current + 1);    
+                                next.set(pt, current + 1);
                             }
                         }
                     }
                 }
-            }   
+            }
             if !changed {
                 break;
             }

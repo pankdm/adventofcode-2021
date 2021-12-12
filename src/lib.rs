@@ -1,5 +1,5 @@
-pub mod days;
 pub mod day_template;
+pub mod days;
 
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -130,7 +130,6 @@ impl GridExt for Grid {
         self[v.y as usize][v.x as usize] = c;
     }
 }
-
 
 type Grid2 = Vec<Vec<u8>>;
 

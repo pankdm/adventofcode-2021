@@ -10,50 +10,12 @@ use std::collections::{HashMap, HashSet, VecDeque};
 
 use crate::*;
 
-pub fn go(now: &String, graph: &HashMap<String, Vec<String>>, path: Vec<String>) -> i64 {
-    let mut res = 0;
-    for next in graph[now].iter() {
-        if next.chars().all(|c| c.is_lowercase()) {
-            if path.contains(&next) {
-                continue;
-            }
-        }
-        if next == "end" {
-            res += 1;
-            continue;
-        }
-        let mut next_path = path.clone();
-        next_path.push(next.clone());
-        res += go(next, graph, next_path);
-    }
-    res
-}
-
-pub fn part1(lines: &Vec<String>) -> i64 {
-    let mut graph = HashMap::new();
-
-    for line in lines {
-        let parts = split_string(line, "-");
-        let a = parts[0].clone();
-        let b = parts[1].clone();
-        graph.entry(a.clone()).or_insert(Vec::new()).push(b.clone());
-        graph.entry(b).or_insert(Vec::new()).push(a);
-    }
-
-    let mut mapping = HashMap::new();
-    for (index, v) in graph.keys().enumerate() {
-        mapping.insert(v, index);
-    }
-
-    let start = "start".to_string();
-    let path = vec![start.clone()];
-
-    go(&start, &graph, path)
-}
-
-
-
-pub fn go2(now: &String, graph: &HashMap<String, Vec<String>>, path: Vec<String>) -> i64 {
+pub fn go(
+    now: &String,
+    graph: &HashMap<String, Vec<String>>,
+    path: Vec<String>,
+    can2: bool,
+) -> i64 {
     let mut res = 0;
     for next in graph[now].iter() {
         if next == "end" {
@@ -67,22 +29,24 @@ pub fn go2(now: &String, graph: &HashMap<String, Vec<String>>, path: Vec<String>
         let mut got2 = false;
         if next.chars().all(|c| c.is_lowercase()) {
             if path.contains(&next) {
+                if !can2 {
+                    continue;
+                }
                 got2 = true;
             }
         }
         let mut next_path = path.clone();
         next_path.push(next.clone());
         if got2 {
-            res += go(next, graph, next_path);
+            res += go(next, graph, next_path, false);
         } else {
-            res += go2(next, graph, next_path);
+            res += go(next, graph, next_path, can2);
         }
     }
     res
 }
 
-
-pub fn part2(lines: &Vec<String>) -> i64 {
+pub fn solve(lines: &Vec<String>, can2: bool) -> i64 {
     let mut graph = HashMap::new();
 
     for line in lines {
@@ -93,15 +57,18 @@ pub fn part2(lines: &Vec<String>) -> i64 {
         graph.entry(b).or_insert(Vec::new()).push(a);
     }
 
-    let mut mapping = HashMap::new();
-    for (index, v) in graph.keys().enumerate() {
-        mapping.insert(v, index);
-    }
-
     let start = "start".to_string();
     let path = vec![start.clone()];
 
-    go2(&start, &graph, path)
+    go(&start, &graph, path, can2)
+}
+
+pub fn part1(lines: &Vec<String>) -> i64 {
+    solve(lines, false)
+}
+
+pub fn part2(lines: &Vec<String>) -> i64 {
+    solve(lines, true)
 }
 
 pub fn read_main_input() -> Vec<String> {
@@ -124,13 +91,13 @@ mod tests {
     #[test]
     fn test_part1() {
         let lines = read_main_input();
-        assert_eq!(part1(&lines), -1);
+        assert_eq!(part1(&lines), 4970);
     }
 
     #[test]
     fn test_part2() {
         let lines = read_main_input();
-        assert_eq!(part2(&lines), -1);
+        assert_eq!(part2(&lines), 137948);
     }
 }
 
