@@ -88,7 +88,7 @@ pub fn solve(lines: &Vec<String>, steps: usize) -> i64 {
     // first letter
     *counts.entry(input.to_vec()[0]).or_insert(0) += 1;
 
-    let mut x: Vec<_> = counts.values().collect();
+    let mut x = counts.values().cv();
     x.sort();
     (x[x.len() - 1] - x[0]) as i64
 }

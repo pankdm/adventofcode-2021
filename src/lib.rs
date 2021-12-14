@@ -22,10 +22,6 @@ pub fn to_vv_char(lines: &Vec<String>) -> Vec<Vec<char>> {
     lines.iter().map(|x| x.to_vec()).collect()
 }
 
-pub fn to_str(v: &Vec<char>) -> String {
-    v.iter().collect()
-}
-
 pub fn parse_i64(s: &str) -> i64 {
     match s.parse::<i64>() {
         Err(e) => {
@@ -165,6 +161,16 @@ impl ToVec for str {
     }
 }
 
+pub trait ToStr {
+    fn to_str(&self) -> String;
+}
+
+impl ToStr for Vec<char> {
+    fn to_str(&self) -> String {
+        self.iter().collect()
+    }
+}
+
 // Extended gcd algorithm
 // returns (g, x, y) where
 //  - gcd(a, b) = g
@@ -187,3 +193,10 @@ pub fn mod_inverse(a: i64, m: i64) -> i64 {
     // a * x + m * y == 1
     return x % m;
 }
+
+pub trait CollectVec: Iterator + Sized {
+    fn cv(self) -> Vec<Self::Item> {
+        self.collect()
+    }
+}
+impl<I: Iterator> CollectVec for I {}

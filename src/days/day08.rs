@@ -93,7 +93,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
     let mut res = 0;
 
     for (index, row) in rows.iter().enumerate() {
-        let range: Vec<_> = (0..7).collect();
+        let range = (0..7).cv();
         for p in range.iter().permutations(range.len()) {
             let mut ok = true;
             let mut mapping: HashMap<String, _> = HashMap::new();

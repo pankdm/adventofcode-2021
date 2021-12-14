@@ -44,7 +44,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
     for line in lines {
         let re = Regex::new(r"(\d+),(\d+) -> (\d+),(\d+)").unwrap();
         let cap = re.captures(line).unwrap();
-        let v: Vec<_> = (1..=4).map(|i| cap[i].to_i64()).collect();
+        let v = (1..=4).map(|i| cap[i].to_i64()).cv();
         vents.push((v[0], v[1], v[2], v[3]));
     }
     let mut points = HashMap::new();

@@ -14,7 +14,7 @@ pub fn debug_print(m: &HashSet<(i64, i64)>) {
     let mx = m.iter().map(|v| v.0).max().unwrap() as usize;
     let my = m.iter().map(|v| v.1).max().unwrap() as usize;
 
-    let mut grid = vec![vec!['.'; mx + 1]; my + 1];
+    let mut grid = vec![vec![' '; mx + 1]; my + 1];
     for v in m.iter() {
         grid[v.1 as usize][v.0 as usize] = '#';
     }
@@ -90,7 +90,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
 }
 
 pub fn read_main_input() -> Vec<String> {
-    let args = std::env::args().collect::<Vec<String>>();
+    let args = std::env::args().cv();
     let mut file = "in.txt".to_string();
 
     // Overwrite the input file, but not in test env

@@ -44,7 +44,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
         let bit = if n1 >= n0 { '1' } else { '0' };
         v0.retain(|x| x[i] == bit);
     }
-    let res0 = i64::from_str_radix(&to_str(&v0[0]), 2).unwrap();
+    let res0 = i64::from_str_radix(&v0[0].to_str(), 2).unwrap();
 
     let mut v1 = nums.clone();
     for i in 0..n {
@@ -57,7 +57,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
         let bit = if n0 <= n1 { '0' } else { '1' };
         v1.retain(|x| x[i] == bit);
     }
-    let res1 = i64::from_str_radix(&to_str(&v1[0]), 2).unwrap();
+    let res1 = i64::from_str_radix(&v1[0].to_str(), 2).unwrap();
 
     res0 * res1
 }

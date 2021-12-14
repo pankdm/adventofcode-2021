@@ -44,7 +44,7 @@ pub fn flash(mut m: &mut Vec<Vec<u8>>) -> i64 {
 pub fn part1(lines: &Vec<String>) -> i64 {
     let mut state = Vec::new();
     for line in lines {
-        let row: Vec<u8> = line.chars().map(|c| c as u8 - '0' as u8).collect();
+        let row = line.chars().map(|c| c as u8 - '0' as u8).cv();
         state.push(row);
     }
     let dirs = vec![(-1, 0), (1, 0), (0, -1), (0, 1)];
@@ -68,7 +68,7 @@ pub fn part1(lines: &Vec<String>) -> i64 {
 pub fn part2(lines: &Vec<String>) -> i64 {
     let mut state = Vec::new();
     for line in lines {
-        let row: Vec<u8> = line.chars().map(|c| c as u8 - '0' as u8).collect();
+        let row = line.chars().map(|c| c as u8 - '0' as u8).cv();
         state.push(row);
     }
     let dirs = vec![(-1, 0), (1, 0), (0, -1), (0, 1)];

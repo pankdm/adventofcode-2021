@@ -11,7 +11,7 @@ use std::collections::{HashMap, HashSet, VecDeque};
 use crate::*;
 
 pub fn read_main_input() -> Vec<String> {
-    let args = std::env::args().collect::<Vec<String>>();
+    let args = std::env::args().cv();
     let mut file = "in.txt".to_string();
 
     // Overwrite the input file, but not in test env
