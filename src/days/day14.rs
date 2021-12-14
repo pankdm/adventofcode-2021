@@ -57,11 +57,7 @@ pub fn solve(lines: &Vec<String>, steps: usize) -> i64 {
         rules.insert(p[0].clone(), c);
     }
 
-    let mut pairs: HashMap<String, i64> = HashMap::new();
-    for index in 1..input.len() {
-        let part: String = input[index - 1..=index].iter().collect();
-        *pairs.entry(part).or_insert(0) += 1;
-    }
+    let mut pairs: HashMap<String, usize> = input.windows(2).map(|x| x.iter().collect()).counts();
 
     for step in 0..steps {
         let mut next = HashMap::new();
@@ -81,12 +77,12 @@ pub fn solve(lines: &Vec<String>, steps: usize) -> i64 {
     }
 
     let mut counts = HashMap::new();
+    // first letter
+    counts.insert(input.to_vec()[0], 1);
     for (s, value) in pairs.iter() {
         let c = s.to_vec()[1];
         *counts.entry(c).or_insert(0) += value;
     }
-    // first letter
-    *counts.entry(input.to_vec()[0]).or_insert(0) += 1;
 
     let mut x = counts.values().cv();
     x.sort();
