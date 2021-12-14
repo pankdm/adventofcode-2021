@@ -10,14 +10,6 @@ use std::collections::{HashMap, HashSet, VecDeque};
 
 use crate::*;
 
-pub fn part1(lines: &Vec<String>) -> i64 {
-    -1
-}
-
-pub fn part2(lines: &Vec<String>) -> i64 {
-    -1
-}
-
 pub fn read_main_input() -> Vec<String> {
     let args = std::env::args().collect::<Vec<String>>();
     let mut file = "in.txt".to_string();
@@ -53,4 +45,12 @@ pub fn main() {
 
     println!("part1 = {}", part1(&lines));
     println!("part2 = {}", part2(&lines));
+}
+
+pub fn part1(lines: &Vec<String>) -> i64 {
+    -1
+}
+
+pub fn part2(lines: &Vec<String>) -> i64 {
+    -1
 }
