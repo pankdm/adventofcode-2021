@@ -51,14 +51,13 @@ pub fn fold(m: &mut HashSet<(i64, i64)>, input: &String) {
     }
 }
 
-
 pub fn part1(lines: &Vec<String>) -> i64 {
     let mut m = HashSet::new();
     for line in lines {
         if line.contains(",") {
             let parts = split_string(line, ",");
-            let x= parts[0].to_i64();
-            let y=  parts[1].to_i64();
+            let x = parts[0].to_i64();
+            let y = parts[1].to_i64();
             m.insert((x, y));
         } else if line.starts_with("fold") {
             let parts = split_string(line, " ");
@@ -75,8 +74,8 @@ pub fn part2(lines: &Vec<String>) -> i64 {
     for line in lines {
         if line.contains(",") {
             let parts = split_string(line, ",");
-            let x= parts[0].to_i64();
-            let y=  parts[1].to_i64();
+            let x = parts[0].to_i64();
+            let y = parts[1].to_i64();
             m.insert((x, y));
         } else if line.starts_with("fold") {
             let parts = split_string(line, " ");
