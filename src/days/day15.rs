@@ -86,8 +86,12 @@ pub fn dijkstra(map: &Vec<Vec<i32>>) -> i64 {
             }
             if x >= 0 && y >= 0 && y < map.len() as i32 && x < map[0].len() as i32 {
                 let next_d = map[y as usize][x as usize] + d;
-                let cur_d = *dist.entry((x, y)).or_insert(next_d);
-                *dist.entry((x, y)).or_insert(next_d) = next_d.min(cur_d);
+                let key = (x, y);
+                if !dist.contains_key(&key) {
+                    dist.insert(key, next_d);
+                } else {
+                    dist.insert(key, dist[&key].min(next_d));
+                }
             }
         }
     }
@@ -117,8 +121,8 @@ pub fn part2(lines: &Vec<String>) -> i64 {
 
     for h in 0..5 {
         for w in 0..5 {
-            for y in 0..small.len() {
-                for x in 0..small[0].len() {
+            for y in 0..height {
+                for x in 0..width {
                     map[y + h * height][x + w * width] = mod9(small[y][x] + h as i32 + w as i32);
                 }
             }
