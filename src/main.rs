@@ -14,5 +14,5 @@ use aoc::*;
 use days::*;
 
 fn main() {
-    day14::main();
+    day15::main();
 }
