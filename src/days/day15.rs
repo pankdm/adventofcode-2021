@@ -47,13 +47,16 @@ pub fn main() {
     println!("part2 = {}", part2(&lines));
 }
 
-pub fn part1(lines: &Vec<String>) -> i64 {
+pub fn parse(lines: &Vec<String>) -> Vec<Vec<i32>> {
     let mut map = Vec::new();
     for line in lines {
         let row = line.chars().map(|x| (x as u8 - '0' as u8) as i32).cv();
         map.push(row);
     }
+    map
+}
 
+pub fn dijkstra(map: &Vec<Vec<i32>>) -> i64 {
     let mut dist = HashMap::new();
     dist.insert((0, 0), 0);
     let mut visited = HashSet::new();
@@ -68,7 +71,7 @@ pub fn part1(lines: &Vec<String>) -> i64 {
         let now = dist.iter().min_by_key(|x| x.1).unwrap().clone();
         // println!("at {:?} dist = {}", now.0, now.1);
         let d = *now.1;
-        let (x0, y0 ) = now.0.clone();
+        let (x0, y0) = now.0.clone();
         if (x0, y0) == last {
             return d as i64;
         }
@@ -88,7 +91,11 @@ pub fn part1(lines: &Vec<String>) -> i64 {
             }
         }
     }
-    -1
+}
+
+pub fn part1(lines: &Vec<String>) -> i64 {
+    let map = parse(lines);
+    dijkstra(&map)
 }
 
 pub fn mod9(mut x: i32) -> i32 {
@@ -99,11 +106,7 @@ pub fn mod9(mut x: i32) -> i32 {
 }
 
 pub fn part2(lines: &Vec<String>) -> i64 {
-    let mut small = Vec::new();
-    for line in lines {
-        let row = line.chars().map(|x| (x as u8 - '0' as u8) as i32).cv();
-        small.push(row);
-    }
+    let small = parse(lines);
 
     let height = small.len();
     let width = small[0].len();
@@ -122,42 +125,5 @@ pub fn part2(lines: &Vec<String>) -> i64 {
         }
     }
 
-
-    let mut dist = HashMap::new();
-    dist.insert((0, 0), 0);
-    let mut visited = HashSet::new();
-    visited.insert((0, 0));
-
-    let last = ((map[0].len() - 1) as i32, (map.len() - 1) as i32);
-
-    let mut dirs = [(-1, 0), (1, 0), (0, 1), (0, -1)];
-
-    let mut total = 0;
-    loop {
-        // println!("dist = {:?}", dist);
-        let now = dist.iter().min_by_key(|x| x.1).unwrap().clone();
-        // println!("{}, at {:?} dist = {}", total, now.0, now.1);
-        total += 1;
-        let d = *now.1;
-        let (x0, y0 ) = now.0.clone();
-        if (x0, y0) == last {
-            return d as i64;
-        }
-        visited.insert((x0, y0));
-        dist.remove(&(x0, y0));
-
-        for (dx, dy) in dirs.iter() {
-            let x = x0 + dx;
-            let y = y0 + dy;
-            if visited.contains(&(x, y)) {
-                continue;
-            }
-            if x >= 0 && y >= 0 && y < map.len() as i32 && x < map[0].len() as i32 {
-                let next_d = map[y as usize][x as usize] + d;
-                let cur_d = *dist.entry((x, y)).or_insert(next_d);
-                *dist.entry((x, y)).or_insert(next_d) = next_d.min(cur_d);
-            }
-        }
-    }
-    -1
+    dijkstra(&map)
 }
