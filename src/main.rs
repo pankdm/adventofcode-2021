@@ -4,6 +4,8 @@
 #![allow(unused_variables)]
 #![allow(unused_mut)]
 
+use std::time::Instant;
+
 // Some basic includes to always include
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::env;
@@ -14,5 +16,10 @@ use aoc::*;
 use days::*;
 
 fn main() {
+    let now = Instant::now();
+
     day15::main();
+
+    let elapsed_ms = now.elapsed().as_millis();
+    println!("Finished in {}ms", elapsed_ms);
 }

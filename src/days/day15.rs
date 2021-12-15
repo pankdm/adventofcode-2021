@@ -6,7 +6,10 @@
 
 // Some basic includes to alwawys include
 use itertools::Itertools;
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::{
+    cmp::Reverse,
+    collections::{BinaryHeap, HashMap, HashSet, VecDeque},
+};
 
 use crate::*;
 
@@ -57,41 +60,33 @@ pub fn parse(lines: &Vec<String>) -> Vec<Vec<i32>> {
 }
 
 pub fn dijkstra(map: &Vec<Vec<i32>>) -> i64 {
-    let mut dist = HashMap::new();
-    dist.insert((0, 0), 0);
-    let mut visited = HashSet::new();
-    visited.insert((0, 0));
+    let h = map.len();
+    let w = map[0].len();
 
-    let last = ((map[0].len() - 1) as i32, (map.len() - 1) as i32);
+    let mut visited = vec![vec![false; w]; h];
+
+    let last = ((w - 1) as i32, (h - 1) as i32);
 
     let mut dirs = [(-1, 0), (1, 0), (0, 1), (0, -1)];
+    let mut heap = BinaryHeap::new();
+    heap.push((Reverse(0), 0, 0));
 
     loop {
-        // println!("dist = {:?}", dist);
-        let now = dist.iter().min_by_key(|x| x.1).unwrap().clone();
-        // println!("at {:?} dist = {}", now.0, now.1);
-        let d = *now.1;
-        let (x0, y0) = now.0.clone();
+        let (d, x0, y0) = heap.pop().unwrap();
         if (x0, y0) == last {
-            return d as i64;
+            return d.0 as i64;
         }
-        visited.insert((x0, y0));
-        dist.remove(&(x0, y0));
+        if visited[y0 as usize][x0 as usize] {
+            continue;
+        }
+        visited[y0 as usize][x0 as usize] = true;
 
         for (dx, dy) in dirs.iter() {
             let x = x0 + dx;
             let y = y0 + dy;
-            if visited.contains(&(x, y)) {
-                continue;
-            }
             if x >= 0 && y >= 0 && y < map.len() as i32 && x < map[0].len() as i32 {
-                let next_d = map[y as usize][x as usize] + d;
-                let key = (x, y);
-                if !dist.contains_key(&key) {
-                    dist.insert(key, next_d);
-                } else {
-                    dist.insert(key, dist[&key].min(next_d));
-                }
+                let next_d = map[y as usize][x as usize] + d.0;
+                heap.push((Reverse(next_d), x, y));
             }
         }
     }
