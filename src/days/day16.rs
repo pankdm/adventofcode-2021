@@ -51,23 +51,6 @@ pub fn main() {
 // 110100101111111000101000
 // VVVTTTAAAAABBBBBCCCCC
 
-pub fn append_hex(c: char, bin: &mut Vec<i64>) {
-    let mut value;
-    if c.is_digit(10) {
-        value = c as u8 - '0' as u8;
-    } else {
-        value = c as u8 - 'A' as u8 + 10;
-        assert!(value <= 15);
-    }
-    let mut res = Vec::new();
-    for i in 0..4 {
-        res.push((value % 2) as i64);
-        value /= 2;
-    }
-    // println!("appending {:?} for {}", res, c);
-    bin.extend(res.iter().rev());
-}
-
 pub fn read_bits(pos: usize, bits: usize, d: &Vec<i64>) -> i64 {
     let mut res = 0;
     for i in pos..pos + bits {
@@ -98,6 +81,7 @@ pub fn read_literal(mut pos: usize, d: &Vec<i64>) -> (usize, i64) {
     (pos, value)
 }
 
+#[derive(Default)]
 struct Parser {
     pub versions: Vec<i64>,
 }
@@ -140,9 +124,9 @@ impl Parser {
                 packets.push(value);
             }
         }
-        // TODO
+
         let res = match t {
-            0 => packets.iter().sum::<i64>(),
+            0 => packets.iter().sum(),
             1 => packets.iter().product(),
             2 => *packets.iter().min().unwrap(),
             3 => *packets.iter().max().unwrap(),
@@ -179,31 +163,29 @@ pub fn to_str(d: &[i64]) -> String {
         .collect::<String>()
 }
 
-pub fn part1(lines: &Vec<String>) -> i64 {
-    let mut bin = Vec::new();
+pub fn parse(lines: &Vec<String>) -> Vec<i64> {
+    let mut d = Vec::new();
     for c in lines[0].chars() {
-        append_hex(c, &mut bin);
+        let digit = c.to_digit(16).unwrap();
+        let s = format!("{:04b}", digit);
+        let digits = s.chars().map(|x| x.to_digit(2).unwrap() as i64).cv();
+        d.extend(digits);
     }
-    // println!("bin = {}", to_str(&bin));
+    d
+}
 
-    let mut p = Parser {
-        versions: Vec::new(),
-    };
-    let (pos, value) = p.parse_packet(0, &bin);
+pub fn part1(lines: &Vec<String>) -> i64 {
+    let d = parse(lines);
+    let mut p = Parser::default();
+    let (pos, value) = p.parse_packet(0, &d);
 
     p.versions.iter().sum()
 }
 
 pub fn part2(lines: &Vec<String>) -> i64 {
-    let mut bin = Vec::new();
-    for c in lines[0].chars() {
-        append_hex(c, &mut bin);
-    }
-    // println!("bin = {}", to_str(&bin));
+    let d = parse(lines);
+    let mut p = Parser::default();
+    let (pos, value) = p.parse_packet(0, &d);
 
-    let mut p = Parser {
-        versions: Vec::new(),
-    };
-    let (pos, value) = p.parse_packet(0, &bin);
     value
 }
