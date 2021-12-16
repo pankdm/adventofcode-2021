@@ -57,7 +57,6 @@ pub fn read_bits(pos: usize, bits: usize, d: &Vec<i64>) -> i64 {
         res *= 2;
         res += d[i];
     }
-    // println!("  read from p = {}, {} bits -> {}", pos, bits, res);
     res
 }
 
@@ -66,8 +65,8 @@ pub fn read_literal(mut pos: usize, d: &Vec<i64>) -> (usize, i64) {
     let mut value = 0;
     loop {
         let run = d[pos];
-        // println!("reading literal at pos = {}, run = {}", pos, run);
         pos += 1;
+
         let num = read_bits(pos, 4, d);
         pos += 4;
 
@@ -88,23 +87,20 @@ struct Parser {
 
 impl Parser {
     pub fn parse_packet(&mut self, mut pos: usize, d: &Vec<i64>) -> (usize, i64) {
-        // println!("parsing packet from pos={}, d = {:?}", pos, to_str(&d[pos..d.len()]));
-
         let v = read_bits(pos, 3, d);
         pos += 3;
         self.versions.push(v);
 
         let t = read_bits(pos, 3, d);
         pos += 3;
-        // println!("type = {}", t);
 
         if t == 4 {
             let (pos, value) = read_literal(pos, d);
             return (pos, value);
         }
-        let len_t = d[pos];
         let mut packets = Vec::new();
 
+        let len_t = d[pos];
         pos += 1;
         if len_t == 0 {
             let length = read_bits(pos, 15, d);
@@ -130,27 +126,9 @@ impl Parser {
             1 => packets.iter().product(),
             2 => *packets.iter().min().unwrap(),
             3 => *packets.iter().max().unwrap(),
-            5 => {
-                if packets[0] > packets[1] {
-                    1
-                } else {
-                    0
-                }
-            }
-            6 => {
-                if packets[0] < packets[1] {
-                    1
-                } else {
-                    0
-                }
-            }
-            7 => {
-                if packets[0] == packets[1] {
-                    1
-                } else {
-                    0
-                }
-            }
+            5 => (packets[0] > packets[1]) as i64,
+            6 => (packets[0] < packets[1]) as i64,
+            7 => (packets[0] == packets[1]) as i64,
             _ => unreachable!(),
         };
         (pos, res)
@@ -158,9 +136,7 @@ impl Parser {
 }
 
 pub fn to_str(d: &[i64]) -> String {
-    d.iter()
-        .map(|x| (*x as u8 + '0' as u8) as char)
-        .collect::<String>()
+    d.iter().map(|x| (*x as u8 + '0' as u8) as char).collect()
 }
 
 pub fn parse(lines: &Vec<String>) -> Vec<i64> {
