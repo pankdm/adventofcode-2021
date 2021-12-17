@@ -6,6 +6,7 @@
 
 // Some basic includes to alwawys include
 use itertools::Itertools;
+use regex::Regex;
 use std::collections::{HashMap, HashSet, VecDeque};
 
 use crate::*;

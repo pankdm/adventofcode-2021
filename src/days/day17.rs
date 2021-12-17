@@ -75,7 +75,7 @@ pub fn simulate(mut vx: i64, mut vy: i64, v: &Vec<i64>) -> (bool, i64) {
 
 pub fn parse(lines: &Vec<String>) -> Vec<i64> {
     let s = lines[0].to_string();
-    let re = Regex::new(r"target area: x=([\-\d]+)\.\.([\-\d]+), y=([\-\d]+)\.\.([\-\d]+)").unwrap();
+    let re = Regex::new(r"x=([\-\d]+)..([\-\d]+), y=([\-\d]+)..([\-\d]+)").unwrap();
     let cap = re.captures(&s).unwrap();
     let v = (1..=4).map(|i| cap[i].to_i64()).cv();
     println!("{:?}", v);
