@@ -31,20 +31,20 @@ mod tests {
     #[test]
     fn test_part1() {
         let lines = read_main_input();
-        assert_eq!(part1(&lines), -1);
+        assert_eq!(part1(&lines), 3305);
     }
 
     #[test]
     fn test_part2() {
         let lines = read_main_input();
-        assert_eq!(part2(&lines), -1);
+        assert_eq!(part2(&lines), 4563);
     }
 }
 
 pub fn main() {
     let lines = read_main_input();
 
-    // println!("part1 = {}", part1(&lines));
+    println!("part1 = {}", part1(&lines));
     println!("part2 = {}", part2(&lines));
 }
 
@@ -68,14 +68,14 @@ impl Token {
         if let Token::Value(x) = self {
             return *x;
         }
-        unreachable!();       
+        unreachable!();
     }
 
     pub fn as_value_mut(&mut self) -> &mut i64 {
         if let Token::Value(x) = self {
             return x;
         }
-        unreachable!();       
+        unreachable!();
     }
 
     pub fn to_str(&self) -> String {
@@ -86,20 +86,6 @@ impl Token {
         }
     }
 }
-
-// Example:
-// Here is the process of finding the reduced result of [[[[4,3],4],4],[7,[[8,4],9]]] + [1,1]:
-
-// after addition: [[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]
-// after explode:  [[[[0,7],4],[7,[[8,4],9]]],[1,1]]
-// after explode:  [[[[0,7],4],[15,[0,13]]],[1,1]]
-// after split:    [[[[0,7],4],[[7,8],[0,13]]],[1,1]]
-// after split:    [[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]
-// after explode:  [[[[0,7],4],[[7,8],[6,0]]],[8,1]]
-
-// reducing [ [ [ [ [ 4 3 ] 4 ] 4 ] [ 7 [ [ 8 4 ] 9 ] ] ] [ 1 1 ] ]
-// reducing [ [ [ [ 0 7 ] 4 ] [ 7 [ [ 8 4 ] 9 ] ] ] [ 1 1 ] ]
-// reducing [ [ [ [ 0 7 ] 4 ] [ 15 [ 0 13 ] ] ] [ 1 1 ] ]
 
 type Number = Vec<Token>;
 
@@ -179,8 +165,6 @@ pub fn reduce(now: &mut Number) -> bool {
     false
 }
 
-
-
 pub fn mag(v: &Number, pos: usize) -> (i64, usize) {
     match v[pos] {
         Token::Open => {
@@ -189,11 +173,19 @@ pub fn mag(v: &Number, pos: usize) -> (i64, usize) {
             assert!(v[right_end + 1] == Token::Close);
             (3 * left + 2 * right, right_end + 1)
         }
-        Token::Value(x) => {
-            (x, pos)
-        }
-        _ => unreachable!()
+        Token::Value(x) => (x, pos),
+        _ => unreachable!(),
     }
+}
+
+pub fn add_with_reduce(a: &mut Number, b: &Number) -> i64 {
+    add(a, &b);
+    loop {
+        if !reduce(a) {
+            break;
+        }
+    }
+    mag(a, 0).0
 }
 
 pub fn to_str(now: &Number) -> String {
@@ -207,22 +199,11 @@ pub fn part1(lines: &Vec<String>) -> i64 {
     }
 
     let mut now = nums[0].clone();
-    let mut cnt = 0;
+    let mut res = 0;
     for next in nums[1..].iter() {
-        println!("adding {}/{}", cnt, nums.len());
-        cnt += 1;
-
-        add(&mut now, next);
-        // for step in 0..10 {
-        loop {
-            // println!("   reducing {}", to_str(&now));
-            if !reduce(&mut now) {
-                break;
-            }
-        }
+        res = add_with_reduce(&mut now, next);
     }
-
-    mag(&now, 0).0
+    res
 }
 
 pub fn part2(lines: &Vec<String>) -> i64 {
@@ -239,14 +220,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
             }
             let mut a = nums[ia].clone();
             let b = nums[ib].clone();
-            add(&mut a, &b);
-            loop {
-                // println!("   reducing {}", to_str(&now));
-                if !reduce(&mut a) {
-                    break;
-                }
-            }
-            let m = mag(&mut a, 0).0;
+            let m = add_with_reduce(&mut a, &b);
             res.push(m);
         }
     }

@@ -48,7 +48,6 @@ pub fn main() {
     println!("part2 = {}", part2(&lines));
 }
 
-
 pub fn simulate(mut vx: i64, mut vy: i64, v: &Vec<i64>) -> (bool, i64) {
     let mut x = 0;
     let mut y = 0;
@@ -65,10 +64,10 @@ pub fn simulate(mut vx: i64, mut vy: i64, v: &Vec<i64>) -> (bool, i64) {
         vy -= 1;
         max_y = max_y.max(y);
         if x >= v[0] && x <= v[1] && y >= v[2] && y <= v[3] {
-            return (true, max_y)
+            return (true, max_y);
         }
         if y < v[2] {
-            return (false, max_y)
+            return (false, max_y);
         }
     }
 }
