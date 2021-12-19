@@ -212,7 +212,7 @@ pub fn part2(lines: &Vec<String>) -> i64 {
         nums.push(parse(line));
     }
 
-    let mut res = Vec::new();
+    let mut res = 0;
     for ia in 0..nums.len() {
         for ib in 0..nums.len() {
             if ia == ib {
@@ -221,8 +221,8 @@ pub fn part2(lines: &Vec<String>) -> i64 {
             let mut a = nums[ia].clone();
             let b = nums[ib].clone();
             let m = add_with_reduce(&mut a, &b);
-            res.push(m);
+            res = res.max(m);
         }
     }
-    *res.iter().max().unwrap()
+    res
 }
