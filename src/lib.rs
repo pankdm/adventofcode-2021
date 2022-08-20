@@ -64,7 +64,7 @@ pub struct Vector2d {
 
 impl Vector2d {
     pub fn new(x: i64, y: i64) -> Self {
-        Vector2d { x: x, y: y }
+        Vector2d { x, y }
     }
     pub fn rotate_left(&self) -> Vector2d {
         Vector2d {

@@ -2,6 +2,7 @@
 #![allow(unused_imports)]
 #![allow(dead_code)]
 #![allow(unused_variables)]
+#![allow(unused_assignments)]
 #![allow(unused_mut)]
 
 // Some basic includes to alwawys include
@@ -84,8 +85,6 @@ pub fn part1(lines: &Vec<String>) -> i64 {
         .count() as i64
 }
 
-
-
 type Vec3 = [i64; 3];
 
 #[derive(Clone, Copy, PartialEq, Debug)]
@@ -118,9 +117,7 @@ impl Rect {
 
     pub fn split_impl(self, min: Vec3, max: Vec3, mid: Vec3, id: usize, res: &mut Vec<Rect>) {
         if id >= 3 {
-            res.push(Rect {
-                min, max
-            });
+            res.push(Rect { min, max });
             return;
         }
         let mut ranges = vec![(self.min[id], mid[id])];
@@ -130,7 +127,7 @@ impl Rect {
 
         for (a, b) in ranges {
             let mut next_min = min;
-            let mut next_max = max;        
+            let mut next_max = max;
             next_min[id] = a;
             next_max[id] = b;
             self.split_impl(next_min, next_max, mid, id + 1, res);
@@ -171,7 +168,9 @@ impl Node {
             assert!(rects.len() > 1);
             for next_rect in rects {
                 self.children.push(Node {
-                    rect: next_rect, value: self.value, children: Vec::new()
+                    rect: next_rect,
+                    value: self.value,
+                    children: Vec::new(),
                 });
             }
             for child in self.children.iter_mut() {
@@ -179,7 +178,6 @@ impl Node {
             }
         }
     }
-
 
     pub fn count_ones(&self) -> i64 {
         if self.children.is_empty() {
@@ -194,11 +192,13 @@ impl Node {
     }
 
     pub fn count_nodes(&self) -> i64 {
-        1 + self.children.iter().map(|child| child.count_nodes()).sum::<i64>()
+        1 + self
+            .children
+            .iter()
+            .map(|child| child.count_nodes())
+            .sum::<i64>()
     }
-
 }
-
 
 pub fn intersect_rects(rect: Rect, other: Rect) -> Option<Rect> {
     for id in 0..3 {
@@ -212,12 +212,11 @@ pub fn intersect_rects(rect: Rect, other: Rect) -> Option<Rect> {
         min[id] = rect.min[id].max(other.min[id]);
         max[id] = rect.max[id].min(other.max[id]);
     }
-    Some(Rect {min, max})
+    Some(Rect { min, max })
 }
 
-
 struct KDTree {
-    root: Node
+    root: Node,
 }
 
 impl KDTree {
@@ -227,7 +226,7 @@ impl KDTree {
                 value: 0,
                 rect,
                 children: Vec::new(),
-            }
+            },
         }
     }
 
@@ -239,7 +238,6 @@ impl KDTree {
         self.root.count_ones()
     }
 }
-
 
 pub fn parse_input(lines: &Vec<String>) -> Vec<(Rect, i8)> {
     let mut res = Vec::new();
@@ -269,7 +267,7 @@ pub fn part1_smart(lines: &Vec<String>) -> i64 {
     };
 
     let mut kd_tree = KDTree::new(bounds);
-    
+
     let mut counter = 0;
     for (rect, flag) in parse_input(lines) {
         println!("{}/{} {:?}", counter, lines.len(), rect);
@@ -290,12 +288,10 @@ pub fn part2(lines: &Vec<String>) -> i64 {
         max[id] = input.iter().map(|v| v.0.max[id]).max().unwrap();
     }
 
-    let bounds = Rect {
-        min, max
-    };
+    let bounds = Rect { min, max };
 
     let mut kd_tree = KDTree::new(bounds);
-    
+
     let mut counter = 0;
     for (rect, flag) in parse_input(lines) {
         println!("{}/{} {:?}", counter, lines.len(), rect);
@@ -305,8 +301,6 @@ pub fn part2(lines: &Vec<String>) -> i64 {
     }
     kd_tree.count_ones()
 }
-
-
 
 pub fn part2_smart(lines: &Vec<String>) -> i64 {
     let input = parse_input(lines);
@@ -356,9 +350,9 @@ pub fn part2_smart(lines: &Vec<String>) -> i64 {
 
     let mut res = 0;
 
-    for ix in 0..mx-1 {
-        for iy in 0.. my-1 {
-            for iz in 0..mz-1 {
+    for ix in 0..mx - 1 {
+        for iy in 0..my - 1 {
+            for iz in 0..mz - 1 {
                 if state[ix][iy][iz] == 1 {
                     let xsize = points[0][ix + 1] - points[0][ix];
                     let ysize = points[1][iy + 1] - points[1][iy];
@@ -372,7 +366,6 @@ pub fn part2_smart(lines: &Vec<String>) -> i64 {
 
     res
 }
-
 
 pub fn main() {
     let lines = read_main_input();
