@@ -55,8 +55,18 @@ pub fn main() {
 // # # #A13#B15#C17#D19# # #
 //     #A23#B25#C27#D29#
 //     # # # # # # # # #
-const desired: [i32; 8] = [3, 3, 5, 5, 7, 7, 9, 9];
-const cost: [i32; 8] = [1, 1, 10, 10, 100, 100, 1000, 1000];
+const desired: [i32; 16] = [
+    3, 3, 3, 3, // A
+    5, 5, 5, 5, // B
+    7, 7, 7, 7, // C
+    9, 9, 9, 9, // D
+];
+const cost: [i32; 16] = [
+    1, 1, 1, 1, //A
+    10, 10, 10, 10, //B
+    100, 100, 100, 100, // C
+    1000, 1000, 1000, 1000, //D
+];
 
 const DEBUG: bool = false;
 
@@ -105,11 +115,11 @@ impl State {
         // let mut locked = vec![true; 8];
         // locked[4] = false;
 
-        let locked = vec![false; 8];
+        let locked = vec![false; 16];
 
         let mut occupied = 0;
         for p in &pos {
-            occupied |= 1 << p;
+            occupied |= (1 as i64) << p;
         }
         // very simple example
         // Test configuration
@@ -127,7 +137,7 @@ impl State {
     }
 
     pub fn is_empty(&self, pos: i32) -> bool {
-        (self.occupied & (1 << pos)) == 0
+        (self.occupied & ((1 as i64) << pos)) == 0
     }
 
     pub fn initial() -> State {
@@ -136,7 +146,38 @@ impl State {
         // ###D#D#C#B###
         //   #B#A#A#C#
         //   #########
-        State::from_pos(vec![25, 27, 23, 19, 17, 29, 13, 15])
+        // State::from_pos(vec![25, 27, 23, 19, 17, 29, 13, 15])
+
+        // #############
+        // #...........#
+        // ###D#D#C#B###  1
+        //   #D#C#B#A#    2
+        //   #D#B#A#C#    3
+        //   #B#A#A#C#    4
+        //   #########
+        //    3 5 7 9
+        State::from_pos(vec![
+            45, 37, 47, 29, // A
+            43, 35, 27, 19, // B
+            25, 17, 39, 49, // C
+            13, 23, 33, 15, // D
+        ])
+
+        // Test input:
+        // #############
+        // #...........#
+        // ###B#C#B#D### 1
+        //   #D#C#B#A#   2
+        //   #D#B#A#C#   3
+        //   #A#D#C#A#   4
+        //   #########
+        //    3 5 7 9
+        // State::from_pos(vec![
+        //     43, 49, 37, 29, // A
+        //     13, 17, 35, 27, // B
+        //     15, 47, 39, 25, // C
+        //     19, 45, 23, 33, // D
+        // ])
 
         // Test configuration
         // #############
@@ -149,7 +190,7 @@ impl State {
 
     pub fn next_moves(&self) -> Vec<State> {
         let mut res = Vec::new();
-        for i in 0..8 {
+        for i in 0..16 {
             if DEBUG {
                 println!("adding for i = {}", i);
             }
@@ -177,6 +218,9 @@ impl State {
                 }
 
                 for dst in cur + 1..=11 {
+                    if [3, 5, 7, 9].contains(&dst) {
+                        continue;
+                    }
                     if self.is_empty(dst) {
                         let moves = self.pos[i] / 10 + (cur - dst).abs();
 
@@ -196,6 +240,9 @@ impl State {
                 }
 
                 for dst in (1..=cur - 1).rev() {
+                    if [3, 5, 7, 9].contains(&dst) {
+                        continue;
+                    }
                     if self.is_empty(dst) {
                         let moves = self.pos[i] / 10 + (cur - dst).abs();
 
@@ -219,8 +266,8 @@ impl State {
                 // check that there are no other amphiods in the room
                 let mut ok = true;
                 // by default it wants to go to the last cell
-                let mut dst = desired[i] + 20;
-                for other_id in 0..8 {
+                let mut hallway = [false; 5];
+                for other_id in 0..16 {
                     // skip the same one
                     if other_id == i {
                         continue;
@@ -228,9 +275,9 @@ impl State {
 
                     let other = self.pos[other_id];
                     if in_room(other) {
-                        if other_id / 2 == i / 2 {
-                            if self.pos[other_id] == dst {
-                                dst -= 10;
+                        if other_id / 4 == i / 4 {
+                            if self.pos[other_id] % 10 == desired[i] {
+                                hallway[(self.pos[other_id] / 10) as usize] = true;
                             }
                         } else if self.pos[other_id] % 10 == desired[i] {
                             ok = false;
@@ -250,14 +297,16 @@ impl State {
                         }
                     }
                 }
-                if !self.is_empty(dst) || !self.is_empty(desired[i] + 10) {
-                    // println!(
-                    //     "not OK: other dst {} or {} are not empty",
-                    //     dst,
-                    //     desired[i] + 10
-                    // );
-                    ok = false;
+                let mut dst_index = 4;
+                loop {
+                    if hallway[dst_index] {
+                        dst_index -= 1;
+                    } else {
+                        break;
+                    }
                 }
+                assert!(dst_index > 0);
+                let dst = desired[i] + dst_index as i32 * 10;
 
                 if ok {
                     let moves = dst / 10 + (self.pos[i] - desired[i]).abs();
@@ -279,14 +328,16 @@ impl State {
     pub fn is_in_desired(&self, i: usize) -> bool {
         let x1 = desired[i] + 10;
         let x2 = desired[i] + 20;
-        if self.pos[i] == x1 || self.pos[i] == x2 {
+        let x3 = desired[i] + 30;
+        let x4 = desired[i] + 40;
+        if [x1, x2, x3, x4].contains(&self.pos[i]) {
             return true;
         }
         return false;
     }
 
     pub fn is_final(&self) -> bool {
-        for i in 0..8 {
+        for i in 0..16 {
             if !self.is_in_desired(i) {
                 return false;
             }
@@ -316,7 +367,7 @@ pub fn part1(lines: &Vec<String>) -> i64 {
 
         counter += 1;
         if counter % 100000 == 0 {
-            println!("{} -> At {:?}", counter / 1000, cur);
+            println!("{}k -> At {:?}", counter / 1000, cur);
         }
 
         if cur.is_final() {
