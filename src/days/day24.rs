@@ -202,7 +202,7 @@ pub fn part_helper(lines: &Vec<String>, largest: bool) -> i64 {
         }
     }
     let final_number = res.iter().map(|x| format!("{}", x)).cv().join("");
-    // println!("{}", final_number);
+    println!("{}", final_number);
     final_number.to_i64()
 }
 
